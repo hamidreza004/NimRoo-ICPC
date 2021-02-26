@@ -54,14 +54,20 @@ vector<face> hull3(const vector<pt3> &p)
 	}
 	return f;
 }
-
+ld dis(pt3 p)
+{
+	return sqrt(p.x*p.x+p.y*p.y+p.z*p.z);
+}
 
 int main()
 {
 	ios_base::sync_with_stdio(false),cin.tie(0);
-	int n;
-	while (cin>>n)
+	int t;
+	cin>>t;
+	for (int i=0;i<t;i++)
 	{
+		int n;
+		cin>>n;
 		vector<pt3> p;
 		for (int i=0;i<n;i++)
 		{
@@ -72,23 +78,21 @@ int main()
 		}
 		for (int i=3;i<n;i++) if (abs((p[1]-p[0]).cross(p[2]-p[0]).dot(p[i]))>eps) {swap(p[i],p[3]);break;}
 		auto ans=hull3(p);
-		int res=ans.size();
-		for (int i=0;i<ans.size();i++)
-			for (int j=i+1;j<ans.size();j++)
-			{
-				auto f1=ans[i],f2=ans[j];
-				int arr1[]={f1.a,f1.b,f1.c},arr2[]={f2.a,f2.b,f2.c};
-				vector<int> eq;
-				for (int i=0;i<3;i++)
-					for (int j=0;j<3;j++)
-						if (arr1[i]==arr2[j])
-							eq.push_back(arr1[i]);
-				if (eq.size()!=2) continue;
-				int x=f1.a+f1.b+f1.c-eq[0]-eq[1];
-				int y=f2.a+f2.b+f2.c-eq[0]-eq[1];
-				if (abs((p[x]-p[eq[0]]).cross(p[eq[1]]-p[eq[0]]).dot(p[y]-p[eq[0]]))<eps) res--;
-			}
-		cout<<res<<'\n';
+		ld area=0, vol=0;
+		pt3 base=p[ans[0].a];
+		for (auto t:ans) 
+		{
+			ld a=dis(p[t.a]-p[t.b]),b=dis(p[t.b]-p[t.c]),c=dis(p[t.c]-p[t.a]);
+			ld s=(a+b+c)/2;
+			ld tri=sqrt(s*(s-a)*(s-b)*(s-c));
+			area+=tri;
+			pt3 h=(p[t.b]-p[t.a]).cross(p[t.c]-p[t.a]);
+			ld d=dis(h);
+			h=pt3(h.x/d,h.y/d,h.z/d);
+			ld height=abs(h.dot(base-p[t.a]));
+			vol+=tri*height/3.0;
+		}
+		cout<<fixed<<setprecision(4)<<area<<" "<<vol<<'\n';
 	}
 	return 0;
 }
