@@ -13,6 +13,8 @@ typedef vector <int> vi;
 const ld Eps = 1e-9;
 
 // ax <= b, max(cTx), x >= 0
+// O(nm^2)
+
 vd simplex(vector <vd> a, vd b, vd c) {
 	int n = a.size(), m = a[0].size() + 1, r = n, s = m - 1;
 	vector <vd> d(n + 2, vd(m + 1, 0)); vd x(m - 1);
