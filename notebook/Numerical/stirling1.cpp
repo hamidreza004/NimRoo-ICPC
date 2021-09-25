@@ -79,6 +79,9 @@ int S(int n, int r) {
 			pro(v[i], v[i + hn], v[i]);
 		}
 	}
+	/*for (int k=0; k<=r; k++)
+		cout << v[0][k] << ' '; cout << '\n';*/
+
 	return v[0][r];
 }
 int fac[N], ifac[N], inv[N];
@@ -98,5 +101,5 @@ int main(){
 	prencr();
 	int n, k;
 	cin >> n >> k;
-	cout << S(n, k) << endl;
+	cout << S(n, k) << endl; //Also you have S(n, t) for all t.
 }
