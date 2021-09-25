@@ -45,7 +45,7 @@ pt rotate(pt a, ld theta){return a * polar((ld)1, theta);}
 pt rotatePiv(pt a, ld theta, pt piv){return (a - piv) * polar((ld)1, theta) + piv;}
 ld angleABC(pt a, pt b, pt c){return abs(remainder(arg(a-b) - arg(c-b), 2.0 * PI));}
 pt proj(pt p, pt v){return v * dot(p,v) / norm(v);}
-pt projLine(pt a, line l){return proj(a - l.first,l.second-l.first)+l.first;}
+pt projPtLine(pt a, line l){return proj(a - l.first,l.second-l.first)+l.first;}
 ld disPtLine(pt p, line l){return dis(p-l.first, proj(p-l.first,l.second-l.first));}
 
 int relpos(pt a, pt b, pt c) //c to a-b
@@ -59,7 +59,7 @@ int relpos(pt a, pt b, pt c) //c to a-b
 }
 int relpos(line l, pt b){return relpos(l.first, l.second, b);}
 
-pair<pt,bool> intersectLines(line a, line b)
+pair<pt,bool> intersection(line a, line b)
 {
 	ld c1 = cross(b.first - a.first, a.second - a.first);
 	ld c2 = cross(b.second - a.first, a.second - a.first);
@@ -69,7 +69,7 @@ pair<pt,bool> intersectLines(line a, line b)
 }
 bool intersect(line a, line b)
 {
-	pair<pt, bool> ret = intersectLines(a,b);
+	pair<pt, bool> ret = intersection(a,b);
 	if (!ret.second) return false;
 	if (relpos(a, ret.first) == ON and relpos(b, ret.first) == ON)
 		return true;
@@ -151,6 +151,30 @@ pair<pt, pt> nearestPair(poly &pl)
 	return res;
 }
 
+typedef struct circle{
+	pt c;
+	ld r;
+} cir;
+
+//number of common tangent lines
+int tangentCnt(cir c1, cir c2)
+{
+	ld d= abs(c1.c-c2.c);
+	if (Grt(d, c1.r+c2.r)) return 4; //outside
+	if (Equ(d, c1.r+c2.r)) return 3; //tangent outside
+	if (Lss(d, c1.r+c2.r) && Grt(d, abs(c1.r-c2.r))) return 2; //interfere
+	if (Equ(d, abs(c1.r-c2.r))) return 1; //tangent inside
+	return 0;//inside
+}
+
+line intersection(line l, cir c)
+{
+	ld dis = disPtLine(c.c, l);
+	ld d = sqrt(c.r*c.r - dis*dis);
+	pt p = projPtLine(c.c, l);
+	pt vec = (l.second-l.first)/abs(l.second - l.first);
+	return {p + d * vec, p - d * vec};
+}
 
 
 int main()
