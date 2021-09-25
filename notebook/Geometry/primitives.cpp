@@ -176,12 +176,50 @@ line intersection(line l, cir c)
 	return {p + d * vec, p - d * vec};
 }
 
+/*
+   0 = other is inside this, zero point
+   1 = other is tangent inisde of this, one point
+   2 = other is intersect with this, two point
+   3 = other is tangent outside of this, one point
+   4 = other is outside of this, zero point
+ */
+pair<int, vector<pt> > intersect(cir c, cir other) {
+	ld r = c.r;
+	pt o = c.c;
+	vector<pt> v;
+	ld sumr = other.r + r;
+	ld rr = r - other.r;
+	ld d = dis(o, other.c);
+	ld a = (r*r - other.r*other.r + d*d)/(2*d);
+	ld h = sqrt(r*r-a*a);
+	pt p2 = a * (other.c - o) / d;
+	if(Equ(sumr - d, 0)) {
+		v.push_back(p2);
+		return make_pair(3, v);
+	}
+	if(Equ(rr - d, 0)) {
+		v.push_back(p2);
+		return make_pair(1, v);
+	}
+	if(d <= rr)
+		return make_pair(0, v);
+	if(d >= sumr)
+		return make_pair(4, v);
+	pt p3(p2.x + h*(other.c.y - o.y)/d, p2.y - h*(other.c.x - o.x)/d);
+	pt p4(p2.x - h*(other.c.y - o.y)/d, p2.y + h*(other.c.x - o.x)/d);
+	v.push_back(p3);
+	v.push_back(p4);
+	return make_pair(2, v);
+}
+ld arcarea(ld l, ld r, ld R){//circle with radius(r) intersect with circle with radius (R) and distance between centers equal to (d)
+	ld cosa = (l*l + r*r - R*R)/(2.0*r*l);
+	ld a = acos(cosa);
+	return r*r*(a - sin(2*a)/2);
+}
 
 int main()
 {
 	ios_base::sync_with_stdio(false),cin.tie(0),cout.tie(0);
-
-
 
 	return 0;
 }
