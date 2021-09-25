@@ -78,7 +78,7 @@ int main() {
 		c[i] = 1LL * a[i] * b[i] % MOD;
 
 	ntt(c, true);
-	for (int j=0; j<=n; j++)
+	for (int j=0; j<n; j++)
 		cout << c[j] << ' ';
 	cout << endl;
 
