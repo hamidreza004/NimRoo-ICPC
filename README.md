@@ -2,9 +2,10 @@
 
 *Sharif* ICPC 2020 Team Notebook
 
+### Contestants
 * *Keivan Rezaei*
 * *HamidReza Hedayati*
 * *Ali Shafiee*
 
-
-Coach: *Peyman Jabbar-Zadeh*
+### Coach
+*Peyman Jabbar-Zadeh*
