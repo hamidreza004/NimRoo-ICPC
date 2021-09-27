@@ -7,5 +7,6 @@
 * *HamidReza Hedayati*
 * *Ali Shafiee*
 
-### Coach
-*Peyman Jabbar-Zadeh*
+### Coaches
+* *Hamid Zarrabi-Zadeh*
+* *Peyman Jabbar-Zadeh*
