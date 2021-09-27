@@ -1,7 +1,3 @@
-#include <bits/stdc++.h>
-
-using namespace std;
-
 //Order : General: mn^2, Bipartite: mn^0.5, Zero-One: mn^(2/3)
 
 const int maxN = 1000, maxE = 2 * 1e5 + 10;

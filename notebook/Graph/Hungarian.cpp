@@ -1,15 +1,3 @@
-#include <bits/stdc++.h>
-
-#define F first
-#define S second
-#define pii pair<int, int>
-#define pb push_back
-
-using namespace std;
-
-typedef long long ll;
-typedef long double ld;
-
 const int N = 2002;
 const int INF = 1e9;
 int hn, weight[N][N]; //hn should contain number of vertices in each part. weight must be positive.
@@ -54,7 +42,6 @@ int hungarian() // maximum weighted perfect matching O(n^3)
 }
 
 int main() {
-	ios_base::sync_with_stdio(0); cin.tie(0);
 	int n, e; cin >> n >> e;
 	for (int i=0; i<e; i++)
 	{
