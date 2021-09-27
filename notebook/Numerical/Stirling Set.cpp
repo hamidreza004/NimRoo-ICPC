@@ -1,7 +1,3 @@
-#include <bits/stdc++.h>
-
-using namespace std;
-
 const int MOD = 998244353;
 const int LG = 16; // IF YOU WANT TO CONVOLVE TWO ARRAYS OF LENGTH N AND M CHOOSE LG IN SUCH A WAY THAT 2ˆLG > n + m
 const int MAX = (1 << LG);
@@ -83,4 +79,3 @@ int main() {
 	cout << endl;
 
 }
-

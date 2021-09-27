@@ -1,13 +1,3 @@
-#include <bits/stdc++.h>
-
-#define F first
-#define S second
-#define pb push_back
-#define pii pair<int, int>
-
-using namespace std;
-
-typedef long double ld;
 typedef vector <ld> vd;
 typedef vector <int> vi;
 const ld Eps = 1e-9;
@@ -61,4 +51,3 @@ vd simplex(vector <vd> a, vd b, vd c) {
 		if(ix[i] <m - 1) x[ix[i]] = d[i - m][m];
 	return x;
 }
-

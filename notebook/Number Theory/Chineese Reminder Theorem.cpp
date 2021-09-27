@@ -1,31 +1,23 @@
-#include <bits/stdc++.h>
-
-#define F first
-#define S second
 #define lcm LLLCCM
 
-using namespace std;
+ll GCD(ll a, ll b) { return (b == 0) ? a : GCD(b, a % b); }
+inline ll LCM(ll a, ll b) { return a / GCD(a, b) * b; }
+inline ll normalize(ll x, ll mod) { x %= mod; if (x < 0) x += mod; return x; }
 
-typedef long long ll;
-
-long long GCD(long long a, long long b) { return (b == 0) ? a : GCD(b, a % b); }
-inline long long LCM(long long a, long long b) { return a / GCD(a, b) * b; }
-inline long long normalize(long long x, long long mod) { x %= mod; if (x < 0) x += mod; return x; }
-
-struct GCD_type { long long x, y, d; };
-GCD_type ex_GCD(long long a, long long b){
+struct GCD_type { ll x, y, d; };
+GCD_type ex_GCD(ll a, ll b){
 	if (b == 0) return {1, 0, a};
 	GCD_type pom = ex_GCD(b, a % b);
 	return {pom.y, pom.x - a / b * pom.y, pom.d};
 }
 
 const int N = 2;
-long long r[N], n[N], ans, lcm;
+ll r[N], n[N], ans, lcm;
 // t: number of equations,
 // r: reminder array, n: mod array
 // returns {reminder, lcm}
 
-pair <long long, long long> CRT(ll* r, ll *n, int t) {
+pair <ll, ll> CRT(ll* r, ll *n, int t) {
 	for(int i = 0; i < t; i++)
 		normalize(r[i], n[i]);
 	ans = r[0];

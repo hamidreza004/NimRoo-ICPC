@@ -1,15 +1,3 @@
-#include <bits/stdc++.h>
-
-#define F first
-#define S second
-#define pii pair<int, int>
-#define pb push_back
-
-using namespace std;
-
-typedef long long ll;
-typedef long double ld;
-
 const int maxN = 105;
 typedef vector <int> vec;
 

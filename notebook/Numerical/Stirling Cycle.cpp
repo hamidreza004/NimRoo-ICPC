@@ -1,8 +1,3 @@
-#include <bits/stdc++.h>
-
-using namespace std;
-typedef long long ll;
-
 const int mod = 998244353;
 const int root = 15311432;
 const int root_1 = 469870224;

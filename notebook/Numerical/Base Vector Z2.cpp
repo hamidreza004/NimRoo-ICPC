@@ -1,9 +1,4 @@
-#include <bits/stdc++.h>
-
-using namespace std;
-
 const int maxL = 61;
-typedef long long ll;
 
 struct Base{
 	ll a[maxL] = {};
