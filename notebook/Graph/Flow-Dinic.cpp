@@ -15,7 +15,7 @@ void addEdge(int u, int v, int uv, int vu = 0){
 }
 int lv[maxN], q[maxN];
 bool bfs(int source, int sink){
-	memset(lv, 63, sizeof(lv));
+	memset(lv, 31, sizeof(lv));
 	int h = 0, t = 0;
 	lv[source] = 0;
 	q[t++] = source;
