@@ -35,7 +35,7 @@ istream& operator >> (istream& in, pt p){ld valx,valy; in>>valx>>valy; p={valx,v
 ostream& operator << (ostream& out, pt p){out<<p.x<<' '<<p.y; return out;}
 
 //Start:
-pt bary(pt A, pt B, pt C, double a, double b, double c) {
+pt bary(pt A, pt B, pt C, ld a, ld b, ld c) {
     return (A*a + B*b + C*c) / (a + b + c);
 }
 pt centroid(pt A, pt B, pt C) {
