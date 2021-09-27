@@ -1,184 +1,239 @@
-const int MAXN = 100 * 1000 + 10;
-const int MAXLG = 20;
-const int INF = 100 * 1000 * 1000 + 10;
-const int MAXPOINTS = MAXN * MAXLG;
-typedef pair<int ,int> point;
-struct tria{
-	int a, b, c;
-	tria(int _a, int _b, int _c){
-		a = _a; b = _b; c = _c;
-	}
-	tria(){a = b = c = 0;}
+typedef long long ll;
+
+bool ge(const ll& a, const ll& b) { return a >= b; }
+bool le(const ll& a, const ll& b) { return a <= b; }
+bool eq(const ll& a, const ll& b) { return a == b; }
+bool gt(const ll& a, const ll& b) { return a > b; }
+bool lt(const ll& a, const ll& b) { return a < b; }
+int sgn(const ll& a) { return a >= 0 ? a ? 1 : 0 : -1; }
+
+struct pt {
+    ll x, y;
+    pt() { }
+    pt(ll _x, ll _y) : x(_x), y(_y) { }
+    pt operator-(const pt& p) const {
+        return pt(x - p.x, y - p.y);
+    }
+    ll cross(const pt& p) const {
+        return x * p.y - y * p.x;
+    }
+    ll cross(const pt& a, const pt& b) const {
+        return (a - *this).cross(b - *this);
+    }
+    ll dot(const pt& p) const {
+        return x * p.x + y * p.y;
+    }
+    ll dot(const pt& a, const pt& b) const {
+        return (a - *this).dot(b - *this);
+    }
+    ll sqrLength() const {
+        return this->dot(*this);
+    }
+    bool operator==(const pt& p) const {
+        return eq(x, p.x) && eq(y, p.y);
+    }
 };
-struct Delaunay {
-	typedef pair<point, int> ppi;
-	typedef pair<int, int> pii;
-	typedef pair<pii, int> pip;
-	tria t[MAXPOINTS];
-	bool mrk[MAXPOINTS];
-	int last[MAXPOINTS];
-	int childs[MAXPOINTS][3];
-	int cnt;
-	vector<ppi> points;
-	set<pip> edges;
-	vector<tria> res;
-	int n;
-	inline void add_edge(int a, int b, int c){
-		edges.insert(pip(pii(min(a, b), max(a, b)), c));
-	}
-	inline void remove_edge(int a, int b, int c){
-		edges.erase(pip(pii(min(a, b), max(a, b)), c));
-	}
-	int add_triangle(int a, int b, int c){
-		if (cross(points[b].first - points[a].first, points[c].first - points[a].first) == 0)
-			return -1;
-		if (cross(points[b].first - points[a].first, points[c].first - points[a].first) < 0)
-			swap(b, c);
-		add_edge(a, b, cnt);
-		add_edge(b, c, cnt);
-		add_edge(c, a, cnt);
-		t[cnt] = tria(a, b, c);
-		childs[cnt][0] = childs[cnt][1] = childs[cnt][2] = -1;
-		mrk[cnt] = false;
-		last[cnt] = -1;
-		cnt++;
-		return cnt - 1;
-	}
-	inline void remove_triangle(int v){
-		childs[v][0] = childs[v][1] = childs[v][2] = -1;
-		remove_edge(t[v].a, t[v].b, v);
-		remove_edge(t[v].b, t[v].c, v);
-		remove_edge(t[v].c, t[v].a, v);
-	}
-	inline void relax_edge(const int &a, const int &b){
-		pii key(min(a, b), max(a, b));
-		set<pip>::iterator it = edges.lower_bound(pip(key, -1));
-		if (it == edges.end() || it->first != key)
-			return;
-		set<pip>::iterator it2 = it;
-		it2++;
-		if (it2 == edges.end() || it2->first != key)
-			return;
-		int c1 = t[it->second].a + t[it->second].b + t[it->second].c - a - b;
-		int c2 = t[it2->second].a + t[it2->second].b + t[it2->second].c - a - b;
-		if (c1 > n || c2 > n)
-			return;
-		if (inCircle(points[a].first, points[b].first, points[c1].first, points[c2].first) < 0 || 
-				inCircle(points[a].first, points[b].first, points[c2].first, points[c1].first) < 0)
-		{
-			int v1 = it->second;
-			int v2 = it2->second;
-			remove_triangle(v1);
-			remove_triangle(v2);
-			mrk[v1] = mrk[v2] = true;
-			childs[v1][0] = childs[v2][0] = add_triangle(a, c1, c2);
-			childs[v1][1] = childs[v2][1] = add_triangle(b, c1, c2);
-			relax(childs[v1][0]);
-			relax(childs[v1][1]);
-		}
-	}
-	inline void relax(int v){
-		relax_edge(t[v].a, t[v].b);
-		relax_edge(t[v].b, t[v].c);
-		relax_edge(t[v].c, t[v].a);
-	}
-	inline bool inLine(int a, int b, int c){
-		return cross(points[b].first - points[a].first, points[c].first - points[a].first) >= 0;
-	}
-	inline bool inTriangle(int a, int b, int c, int d){
-		return inLine(a, b, d) && inLine(b, c, d) && inLine(c, a, d);
-	}
-	void find(int v, int p, int cl){
-		if (last[v] == cl)
-			return;
-		bool reached = false;
-		last[v] = cl;
-		for (int i = 0; i < 3; i++)
-		{
-			int u = childs[v][i];
-			if (u == -1)
-				continue;
-			reached = true;
-			if (mrk[u] || inTriangle(t[u].a, t[u].b, t[u].c, p))
-				find(u, p, cl);
-		}
-		if (reached)
-			return ;
-		remove_triangle(v);
-		childs[v][0] = add_triangle(p, t[v].a, t[v].b);
-		childs[v][1] = add_triangle(p, t[v].b, t[v].c);
-		childs[v][2] = add_triangle(p, t[v].c, t[v].a);
-		relax(childs[v][0]);
-		relax(childs[v][1]);
-		relax(childs[v][2]);
-	}
-	void getRes(int v, int cl){
-		if (last[v] == cl)
-			return;
-		last[v] = cl;
-		bool reached = false;
-		for (int i = 0; i < 3; i++)
-		{
-			int u = childs[v][i];
-			if (u == -1)
-				continue;
-			reached = true;
-			getRes(u, cl);
-		}
-		if (!reached && t[v].a < n && t[v].b < n && t[v].c < n)
-			res.push_back(t[v]);
-	}
-	vector<tria> delaunay(vector<point> v){
-		cnt = 0;
-		int cl = 0;
-		points.clear();
-		for (int i = 0; i < v.size(); i++)
-			points.push_back(ppi(v[i], i));
-		random_shuffle(points.begin(), points.end());
-		n = points.size();
-		points.push_back(ppi(point(INF, INF), n));
-		points.push_back(ppi(point(-INF * 3, INF), n + 1));
-		points.push_back(ppi(point(INF, -INF * 3), n + 2));
-		int root = add_triangle(n, n + 1, n + 2);
-		for (int i = 0; i < n; i++){
-			//	cout << "@@@@@@@@@@" << inTriangle(n,n+1, n+2, i) << endl;
-			find(root, i, cl++);
-		}
-		res.clear();
-		getRes(root, cl++);
-		for (int i = 0; i < res.size(); i++){
-			res[i].a = points[res[i].a].second;
-			res[i].b = points[res[i].b].second;
-			res[i].c = points[res[i].c].second;
-		}
-		return res;
-	}
+
+const pt inf_pt = pt(1e18, 1e18);
+
+struct QuadEdge {
+    pt origin;
+    QuadEdge* rot = nullptr;
+    QuadEdge* onext = nullptr;
+    bool used = false;
+    QuadEdge* rev() const {
+        return rot->rot;
+    }
+    QuadEdge* lnext() const {
+        return rot->rev()->onext->rot;
+    }
+    QuadEdge* oprev() const {
+        return rot->onext->rot;
+    }
+    pt dest() const {
+        return rev()->origin;
+    }
 };
-long double getRadius(pointD a, pointD b, pointD c){
-	pointD v1 = norm(b - a) + ((a + b) / 2);
-	pointD v2 = norm(c - b) + ((b + c) / 2);
-	pointD center =  intersect((a + b) / 2, v1, (b + c) / 2, v2);
-	pointD ret = a - center;
-	return sqrt(dot(ret, ret));
+
+QuadEdge* make_edge(pt from, pt to) {
+    QuadEdge* e1 = new QuadEdge;
+    QuadEdge* e2 = new QuadEdge;
+    QuadEdge* e3 = new QuadEdge;
+    QuadEdge* e4 = new QuadEdge;
+    e1->origin = from;
+    e2->origin = to;
+    e3->origin = e4->origin = inf_pt;
+    e1->rot = e3;
+    e2->rot = e4;
+    e3->rot = e2;
+    e4->rot = e1;
+    e1->onext = e1;
+    e2->onext = e2;
+    e3->onext = e4;
+    e4->onext = e3;
+    return e1;
 }
-Delaunay d;
-int main(){
-	srand(2019);
-	ios::sync_with_stdio(false);
-	cin.tie(0);
-	int n;
-	cin >> n;
-	vector<point> v;
-	for (int i = 0; i < n; i++)
-	{
-		int x, y;
-		cin >> x >> y;
-		v.push_back(point(x, y));
-	}
-	vector<tria> ans = d.delaunay(v);
-	long double res = 0;
-	for (int i = 0; i < ans.size(); i++)
-		res = max(res, getRadius(v[ans[i].a], v[ans[i].b], v[ans[i].c]));
-	cout.precision(6);
-	cout << fixed << res << endl;
+
+void splice(QuadEdge* a, QuadEdge* b) {
+    swap(a->onext->rot->onext, b->onext->rot->onext);
+    swap(a->onext, b->onext);
+}
+
+void delete_edge(QuadEdge* e) {
+    splice(e, e->oprev());
+    splice(e->rev(), e->rev()->oprev());
+    delete e->rev()->rot;
+    delete e->rev();
+    delete e->rot;
+    delete e;
+}
+
+QuadEdge* connect(QuadEdge* a, QuadEdge* b) {
+    QuadEdge* e = make_edge(a->dest(), b->origin);
+    splice(e, a->lnext());
+    splice(e->rev(), b);
+    return e;
+}
+
+bool left_of(pt p, QuadEdge* e) {
+    return gt(p.cross(e->origin, e->dest()), 0);
+}
+
+bool right_of(pt p, QuadEdge* e) {
+    return lt(p.cross(e->origin, e->dest()), 0);
+}
+
+template <class T>
+T det3(T a1, T a2, T a3, T b1, T b2, T b3, T c1, T c2, T c3) {
+    return a1 * (b2 * c3 - c2 * b3) - a2 * (b1 * c3 - c1 * b3) +
+           a3 * (b1 * c2 - c1 * b2);
+}
+
+bool in_circle(pt a, pt b, pt c, pt d) {
+// If there is __int128, calculate directly.
+// Otherwise, calculate angles.
+#if defined(__LP64__) || defined(_WIN64)
+    __int128 det = -det3<__int128>(b.x, b.y, b.sqrLength(), c.x, c.y,
+                                   c.sqrLength(), d.x, d.y, d.sqrLength());
+    det += det3<__int128>(a.x, a.y, a.sqrLength(), c.x, c.y, c.sqrLength(), d.x,
+                          d.y, d.sqrLength());
+    det -= det3<__int128>(a.x, a.y, a.sqrLength(), b.x, b.y, b.sqrLength(), d.x,
+                          d.y, d.sqrLength());
+    det += det3<__int128>(a.x, a.y, a.sqrLength(), b.x, b.y, b.sqrLength(), c.x,
+                          c.y, c.sqrLength());
+    return det > 0;
+#else
+    auto ang = [](pt l, pt mid, pt r) {
+        ll x = mid.dot(l, r);
+        ll y = mid.cross(l, r);
+        long double res = atan2((long double)x, (long double)y);
+        return res;
+    };
+    long double kek = ang(a, b, c) + ang(c, d, a) - ang(b, c, d) - ang(d, a, b);
+    if (kek > 1e-8)
+        return true;
+    else
+        return false;
+#endif
+}
+
+pair<QuadEdge*, QuadEdge*> build_tr(int l, int r, vector<pt>& p) {
+    if (r - l + 1 == 2) {
+        QuadEdge* res = make_edge(p[l], p[r]);
+        return make_pair(res, res->rev());
+    }
+    if (r - l + 1 == 3) {
+        QuadEdge *a = make_edge(p[l], p[l + 1]), *b = make_edge(p[l + 1], p[r]);
+        splice(a->rev(), b);
+        int sg = sgn(p[l].cross(p[l + 1], p[r]));
+        if (sg == 0)
+            return make_pair(a, b->rev());
+        QuadEdge* c = connect(b, a);
+        if (sg == 1)
+            return make_pair(a, b->rev());
+        else
+            return make_pair(c->rev(), c);
+    }
+    int mid = (l + r) / 2;
+    QuadEdge *ldo, *ldi, *rdo, *rdi;
+    tie(ldo, ldi) = build_tr(l, mid, p);
+    tie(rdi, rdo) = build_tr(mid + 1, r, p);
+    while (true) {
+        if (left_of(rdi->origin, ldi)) {
+            ldi = ldi->lnext();
+            continue;
+        }
+        if (right_of(ldi->origin, rdi)) {
+            rdi = rdi->rev()->onext;
+            continue;
+        }
+        break;
+    }
+    QuadEdge* basel = connect(rdi->rev(), ldi);
+    auto valid = [&basel](QuadEdge* e) { return right_of(e->dest(), basel); };
+    if (ldi->origin == ldo->origin)
+        ldo = basel->rev();
+    if (rdi->origin == rdo->origin)
+        rdo = basel;
+    while (true) {
+        QuadEdge* lcand = basel->rev()->onext;
+        if (valid(lcand)) {
+            while (in_circle(basel->dest(), basel->origin, lcand->dest(),
+                             lcand->onext->dest())) {
+                QuadEdge* t = lcand->onext;
+                delete_edge(lcand);
+                lcand = t;
+            }
+        }
+        QuadEdge* rcand = basel->oprev();
+        if (valid(rcand)) {
+            while (in_circle(basel->dest(), basel->origin, rcand->dest(),
+                             rcand->oprev()->dest())) {
+                QuadEdge* t = rcand->oprev();
+                delete_edge(rcand);
+                rcand = t;
+            }
+        }
+        if (!valid(lcand) && !valid(rcand))
+            break;
+        if (!valid(lcand) ||
+            (valid(rcand) && in_circle(lcand->dest(), lcand->origin,
+                                       rcand->origin, rcand->dest())))
+            basel = connect(rcand, basel->rev());
+        else
+            basel = connect(basel->rev(), lcand->rev());
+    }
+    return make_pair(ldo, rdo);
+}
+
+vector<tuple<pt, pt, pt>> delaunay(vector<pt> p) {
+    sort(p.begin(), p.end(), [](const pt& a, const pt& b) {
+        return lt(a.x, b.x) || (eq(a.x, b.x) && lt(a.y, b.y));
+    });
+    auto res = build_tr(0, (int)p.size() - 1, p);
+    QuadEdge* e = res.first;
+    vector<QuadEdge*> edges = {e};
+    while (lt(e->onext->dest().cross(e->dest(), e->origin), 0))
+        e = e->onext;
+    auto add = [&p, &e, &edges]() {
+        QuadEdge* curr = e;
+        do {
+            curr->used = true;
+            p.push_back(curr->origin);
+            edges.push_back(curr->rev());
+            curr = curr->lnext();
+        } while (curr != e);
+    };
+    add();
+    p.clear();
+    int kek = 0;
+    while (kek < (int)edges.size()) {
+        if (!(e = edges[kek++])->used)
+            add();
+    }
+    vector<tuple<pt, pt, pt>> ans;
+    for (int i = 0; i < (int)p.size(); i += 3) {
+        ans.push_back(make_tuple(p[i], p[i + 1], p[i + 2]));
+    }
+    return ans;
 }
