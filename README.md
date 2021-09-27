@@ -2,7 +2,7 @@
 
 Sharif ICPC 2020 Team Notebook
 
-##### *Keivan Rezaei*
-##### *HamidReza Hedayati*
-##### *Ali Shafiee*
+* *Keivan Rezaei*
+* *HamidReza Hedayati*
+* *Ali Shafiee*
 
