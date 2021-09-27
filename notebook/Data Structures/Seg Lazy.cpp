@@ -1,5 +1,3 @@
-#include<bits/stdc++.h>
-using namespace std;
 const int MAX=1e6+100;
 struct node{
 	int val,lazy;
@@ -44,9 +42,4 @@ void update(int l,int r,int val, int s=0,int e=n,int id=0)
 	update(l,r,val,s,mid,id*2+1);
 	update(l,r,val,mid,e,id*2+2);	
 	merge(id,id*2+1,id*2+2);
-}
-int main()
-{
-	ios_base::sync_with_stdio(false),cin.tie(0),cout.tie(0);
-	return 0;
 }

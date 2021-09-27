@@ -1,11 +1,7 @@
-#include <bits/stdc++.h>
-
 #define F first
 #define S second
 #define pii pair <int, int>
 #define pb psh_back
-
-using namespace std;
 
 typedef long long ll;
 

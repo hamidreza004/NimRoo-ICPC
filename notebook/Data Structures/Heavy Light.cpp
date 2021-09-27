@@ -1,7 +1,3 @@
-#include <bits/stdc++.h>
-using namespace std;
-typedef long long ll;
-typedef long double ld;
 const int N = 2000*100 + 10;
 const int L = 20;
 int par[N][L], h[N], fath[N], st[N], en[N], sz[N];
@@ -41,11 +37,3 @@ void upset(int u, int w, int qv) {
 	if( stL == st[w] ) return;
 	upset( par[fath[u]][0] , w , qv );
 }
-
-int main()
-{
-	ios_base::sync_with_stdio(false),cin.tie(0);
-
-	return 0;
-}
-

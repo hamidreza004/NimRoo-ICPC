@@ -1,7 +1,3 @@
-#include <bits/stdc++.h>
-using namespace std;
-typedef long long ll;
-typedef long double ld;
 const int MAX=1e6+9;
 
 typedef struct item * pitem;
@@ -64,10 +60,4 @@ void output (pitem t) {
 	output (t->l);
 	printf ("%d ", t->value);
 	output (t->r);
-}
-
-int main()
-{
-	ios_base::sync_with_stdio(false),cin.tie(0);
-	return 0;
 }

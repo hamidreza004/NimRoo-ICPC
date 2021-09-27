@@ -1,5 +1,3 @@
-#include<bits/stdc++.h>
-using namespace std;
 typedef long double ld;
 typedef complex<ld> pt;
 typedef vector<pt> poly;
@@ -215,11 +213,4 @@ ld arcarea(ld l, ld r, ld R){//circle with radius(r) intersect with circle with 
 	ld cosa = (l*l + r*r - R*R)/(2.0*r*l);
 	ld a = acos(cosa);
 	return r*r*(a - sin(2*a)/2);
-}
-
-int main()
-{
-	ios_base::sync_with_stdio(false),cin.tie(0),cout.tie(0);
-
-	return 0;
 }

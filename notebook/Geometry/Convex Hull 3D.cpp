@@ -1,8 +1,3 @@
-#include<bits/stdc++.h>
-using namespace std;
-
-typedef long double ld;
-
 struct pt{
 	ld X,Y,Z;
 	pt(ld x=0,ld y=0,ld z=0){X=x; Y=y; Z=z;}

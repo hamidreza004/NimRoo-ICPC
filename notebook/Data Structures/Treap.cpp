@@ -1,8 +1,3 @@
-#include <bits/stdc++.h>
-using namespace std;
-typedef long long ll;
-typedef long double ld;
-const int MAX=1e6+9;
 struct item {
 	int key, prior;
 	item * l, * r;

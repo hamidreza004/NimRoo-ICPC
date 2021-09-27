@@ -1,5 +1,3 @@
-#include<bits/stdc++.h>
-using namespace std;
 typedef pair<pair<int,int>,int > ANS;
 #define MX second
 #define LE first.first
